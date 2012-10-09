@@ -1,6 +1,6 @@
 viber-pin-bf.rb - Viber PIN bruteforce
 =========
- -
+
 This little piece of software will bruteforce the Viber "PIN" key. Viber is a Skype-like  software that claims to have 100 million worldwide users.
 
 Instead of having Viber usernames you use your own mobile phone number as username. When signing up for Viber you confirm that you own the mobile phone number by entering a four digit PIN code that you get by SMS in the registation process.
